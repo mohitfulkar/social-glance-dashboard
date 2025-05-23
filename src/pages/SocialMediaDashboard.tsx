@@ -4,7 +4,10 @@ import { clients } from "@/data/clientsData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, TrendingUp, Users, Heart, MessageCircle, Share, Eye } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowLeft, TrendingUp, Users, Heart, MessageCircle, Share, Eye, Calendar, BarChart3 } from "lucide-react";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, LineChart, Line, ResponsiveContainer, Legend } from "recharts";
 
 const SocialMediaDashboard = () => {
   const { clientId } = useParams();
@@ -33,6 +36,41 @@ const SocialMediaDashboard = () => {
     totalShares: Math.floor(Math.random() * 2000) + 500,
     impressions: Math.floor(Math.random() * 1000000) + 100000,
   };
+
+  // Chart data
+  const platformData = [
+    { name: 'Instagram', value: 35, color: '#E4405F' },
+    { name: 'Facebook', value: 25, color: '#1877F2' },
+    { name: 'Twitter', value: 20, color: '#1DA1F2' },
+    { name: 'LinkedIn', value: 15, color: '#0A66C2' },
+    { name: 'TikTok', value: 5, color: '#000000' }
+  ];
+
+  const engagementData = [
+    { name: 'Likes', value: 45, color: '#FF6B6B' },
+    { name: 'Comments', value: 25, color: '#4ECDC4' },
+    { name: 'Shares', value: 20, color: '#45B7D1' },
+    { name: 'Saves', value: 10, color: '#96CEB4' }
+  ];
+
+  const weeklyData = [
+    { day: 'Mon', posts: 12, engagement: 850 },
+    { day: 'Tue', posts: 15, engagement: 920 },
+    { day: 'Wed', posts: 8, engagement: 750 },
+    { day: 'Thu', posts: 18, engagement: 1100 },
+    { day: 'Fri', posts: 22, engagement: 1350 },
+    { day: 'Sat', posts: 25, engagement: 1500 },
+    { day: 'Sun', posts: 20, engagement: 1200 }
+  ];
+
+  const monthlyGrowthData = [
+    { month: 'Jan', followers: 1200 },
+    { month: 'Feb', followers: 1450 },
+    { month: 'Mar', followers: 1680 },
+    { month: 'Apr', followers: 1950 },
+    { month: 'May', followers: 2300 },
+    { month: 'Jun', followers: 2650 }
+  ];
 
   const recentPosts = [
     {
@@ -63,6 +101,15 @@ const SocialMediaDashboard = () => {
       time: "2 days ago"
     }
   ];
+
+  const chartConfig = {
+    platform: {
+      label: "Platform Distribution",
+    },
+    engagement: {
+      label: "Engagement Types",
+    },
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -169,77 +216,211 @@ const SocialMediaDashboard = () => {
           </Card>
         </div>
 
-        {/* Platform Analytics and Recent Posts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Platform Performance */}
-          <Card className="bg-slate-800/50 border-slate-700/50">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center">
-                <TrendingUp className="w-5 h-5 mr-2 text-purple-400" />
-                Platform Performance
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {client.platforms.map((platform, index) => (
-                  <div key={platform} className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">{platform.charAt(0)}</span>
-                      </div>
-                      <div>
-                        <p className="text-white font-medium">{platform}</p>
-                        <p className="text-gray-400 text-sm">
-                          {Math.floor(Math.random() * 50) + 10}K followers
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-green-400 font-medium">+{Math.floor(Math.random() * 20) + 5}%</p>
-                      <p className="text-gray-400 text-sm">This month</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+        {/* Charts and Analytics */}
+        <Tabs defaultValue="overview" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4 bg-slate-800/50 border-slate-700/50">
+            <TabsTrigger value="overview" className="text-white data-[state=active]:bg-purple-600">Overview</TabsTrigger>
+            <TabsTrigger value="analytics" className="text-white data-[state=active]:bg-purple-600">Analytics</TabsTrigger>
+            <TabsTrigger value="engagement" className="text-white data-[state=active]:bg-purple-600">Engagement</TabsTrigger>
+            <TabsTrigger value="posts" className="text-white data-[state=active]:bg-purple-600">Posts</TabsTrigger>
+          </TabsList>
 
-          {/* Recent Posts */}
-          <Card className="bg-slate-800/50 border-slate-700/50">
-            <CardHeader>
-              <CardTitle className="text-white">Recent Posts</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentPosts.map((post) => (
-                  <div key={post.id} className="p-4 bg-slate-700/30 rounded-lg">
-                    <div className="flex items-start justify-between mb-3">
-                      <Badge variant="outline" className="text-purple-400 border-purple-500/30">
-                        {post.platform}
-                      </Badge>
-                      <span className="text-gray-400 text-sm">{post.time}</span>
+          <TabsContent value="overview" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Platform Distribution Pie Chart */}
+              <Card className="bg-slate-800/50 border-slate-700/50">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <BarChart3 className="w-5 h-5 mr-2 text-purple-400" />
+                    Platform Distribution
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ChartContainer config={chartConfig} className="h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={platformData}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={100}
+                          paddingAngle={5}
+                          dataKey="value"
+                        >
+                          {platformData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <Legend />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
+                </CardContent>
+              </Card>
+
+              {/* Engagement Types Pie Chart */}
+              <Card className="bg-slate-800/50 border-slate-700/50">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <Heart className="w-5 h-5 mr-2 text-pink-400" />
+                    Engagement Breakdown
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ChartContainer config={chartConfig} className="h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={engagementData}
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={100}
+                          dataKey="value"
+                          label={({ name, value }) => `${name}: ${value}%`}
+                        >
+                          {engagementData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <ChartTooltip content={<ChartTooltipContent />} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="analytics" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Weekly Performance Bar Chart */}
+              <Card className="bg-slate-800/50 border-slate-700/50">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <Calendar className="w-5 h-5 mr-2 text-blue-400" />
+                    Weekly Performance
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ChartContainer config={chartConfig} className="h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={weeklyData}>
+                        <XAxis dataKey="day" stroke="#94A3B8" />
+                        <YAxis stroke="#94A3B8" />
+                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <Bar dataKey="posts" fill="#8B5CF6" name="Posts" />
+                        <Bar dataKey="engagement" fill="#06B6D4" name="Engagement" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
+                </CardContent>
+              </Card>
+
+              {/* Monthly Growth Line Chart */}
+              <Card className="bg-slate-800/50 border-slate-700/50">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <TrendingUp className="w-5 h-5 mr-2 text-green-400" />
+                    Follower Growth
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ChartContainer config={chartConfig} className="h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={monthlyGrowthData}>
+                        <XAxis dataKey="month" stroke="#94A3B8" />
+                        <YAxis stroke="#94A3B8" />
+                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <Line 
+                          type="monotone" 
+                          dataKey="followers" 
+                          stroke="#10B981" 
+                          strokeWidth={3}
+                          dot={{ fill: '#10B981', strokeWidth: 2, r: 4 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="engagement" className="space-y-6">
+            {/* Platform Performance */}
+            <Card className="bg-slate-800/50 border-slate-700/50">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <TrendingUp className="w-5 h-5 mr-2 text-purple-400" />
+                  Platform Performance
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {client.platforms.map((platform, index) => (
+                    <div key={platform} className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                          <span className="text-white font-bold text-sm">{platform.charAt(0)}</span>
+                        </div>
+                        <div>
+                          <p className="text-white font-medium">{platform}</p>
+                          <p className="text-gray-400 text-sm">
+                            {Math.floor(Math.random() * 50) + 10}K followers
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-green-400 font-medium">+{Math.floor(Math.random() * 20) + 5}%</p>
+                        <p className="text-gray-400 text-sm">This month</p>
+                      </div>
                     </div>
-                    <p className="text-gray-300 mb-3 text-sm leading-relaxed">{post.content}</p>
-                    <div className="flex items-center space-x-6 text-sm">
-                      <div className="flex items-center space-x-1 text-gray-400">
-                        <Heart className="w-4 h-4" />
-                        <span>{post.likes}</span>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="posts" className="space-y-6">
+            {/* Recent Posts */}
+            <Card className="bg-slate-800/50 border-slate-700/50">
+              <CardHeader>
+                <CardTitle className="text-white">Recent Posts</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {recentPosts.map((post) => (
+                    <div key={post.id} className="p-4 bg-slate-700/30 rounded-lg">
+                      <div className="flex items-start justify-between mb-3">
+                        <Badge variant="outline" className="text-purple-400 border-purple-500/30">
+                          {post.platform}
+                        </Badge>
+                        <span className="text-gray-400 text-sm">{post.time}</span>
                       </div>
-                      <div className="flex items-center space-x-1 text-gray-400">
-                        <MessageCircle className="w-4 h-4" />
-                        <span>{post.comments}</span>
-                      </div>
-                      <div className="flex items-center space-x-1 text-gray-400">
-                        <Share className="w-4 h-4" />
-                        <span>{post.shares}</span>
+                      <p className="text-gray-300 mb-3 text-sm leading-relaxed">{post.content}</p>
+                      <div className="flex items-center space-x-6 text-sm">
+                        <div className="flex items-center space-x-1 text-gray-400">
+                          <Heart className="w-4 h-4" />
+                          <span>{post.likes}</span>
+                        </div>
+                        <div className="flex items-center space-x-1 text-gray-400">
+                          <MessageCircle className="w-4 h-4" />
+                          <span>{post.comments}</span>
+                        </div>
+                        <div className="flex items-center space-x-1 text-gray-400">
+                          <Share className="w-4 h-4" />
+                          <span>{post.shares}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
