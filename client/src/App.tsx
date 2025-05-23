@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -27,26 +26,21 @@ const App = () => (
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin-login" element={<AdminLogin />} />
-          
+
           {/* Client Browse page */}
           <Route path="/clients" element={<Index />} />
-          
+
           {/* Routes with sidebar */}
-          <Route path="/dashboard/:clientId" element={
-            <SideNavigation>
-              <ClientDashboard />
-            </SideNavigation>
-          } />
-          
-          <Route path="/admin-dashboard" element={
-            <SideNavigation>
-              <AdminDashboard />
-            </SideNavigation>
-          } />
-          
+          <Route path="/dashboard/:clientId" element={<ClientDashboard />} />
+
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+
           {/* Legacy route - will be removed */}
-          <Route path="/dashboard/old/:clientId" element={<SocialMediaDashboard />} />
-          
+          <Route
+            path="/dashboard/old/:clientId"
+            element={<SocialMediaDashboard />}
+          />
+
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
         </Routes>

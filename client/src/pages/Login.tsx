@@ -1,38 +1,64 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Lock, User } from "lucide-react";
+import axios from "axios";
 
 const Login = ({ isAdmin = false }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  
-  const handleLogin = (e: React.FormEvent) => {
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // For UI testing only - this simulates a successful login
-    // In a real app, this would verify credentials with the backend
+
     if (isAdmin) {
-      navigate("/admin-dashboard");
+      if (email === "admin@gmail.com" && password === "admin") {
+        localStorage.setItem("user", JSON.stringify({ role: "admin" }));
+        navigate("/admin-dashboard");
+      } else {
+        alert("Invalid admin credentials");
+      }
     } else {
-      navigate("/dashboard/1"); // Navigate to client dashboard - would use real client ID
+      try {
+        const res = await axios.post("http://localhost:5000/api/login", {
+          email,
+          password,
+        });
+
+        const { user, token } = res.data;
+
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", token);
+
+        navigate(`/dashboard/${user.id}`);
+      } catch (err: any) {
+        const errorMsg = err.response?.data?.message || "Login failed";
+        alert(errorMsg);
+      }
     }
   };
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <Link 
-          to="/" 
+        <Link
+          to="/"
           className="inline-flex items-center mb-6 text-gray-300 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Home
         </Link>
-        
+
         <Card className="backdrop-blur-sm bg-slate-900/80 border-slate-800 text-white">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">
@@ -68,8 +94,8 @@ const Login = ({ isAdmin = false }) => {
                   />
                 </div>
               </div>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="w-full bg-purple-600 hover:bg-purple-700"
               >
                 Sign In
