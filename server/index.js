@@ -12,7 +12,7 @@ app.use(
     origin: "http://localhost:8080", // frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // if you send cookies or auth headers
-  })
+  }),
 );
 dotenv.config();
 
@@ -26,10 +26,11 @@ app.use("/api", authRoutes);
 app.use("/api/profile", socialProfileRoutes);
 
 // MongoDB connection
-const MONGO_URI =
-  "mongodb+srv://mohitfulkar:mohitfulkar@mohit.mvv8f91.mongodb.net/socialmedia?retryWrites=true&w=majority&appName=mohit";
+
+console.log(process.env.MONGO_URI);
+
 mongoose
-  .connect(MONGO_URI)
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("MongoDB connected");
     app.listen(PORT, () => {

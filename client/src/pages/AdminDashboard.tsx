@@ -19,6 +19,8 @@ const AdminDashboard = () => {
     averageGrowth: "0%",
   });
   const [clients, setClients] = useState([]);
+
+  console.log(clients)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -246,10 +248,9 @@ const AdminDashboard = () => {
                       <td className="px-4 py-3">
                         <Badge
                           className={`
-                            ${
-                              client.status === "active"
-                                ? "bg-green-500/20 text-green-400 border-green-500/30"
-                                : client.status === "pending"
+                            ${client.status === "active"
+                              ? "bg-green-500/20 text-green-400 border-green-500/30"
+                              : client.status === "pending"
                                 ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
                                 : "bg-red-500/20 text-red-400 border-red-500/30"
                             } 
@@ -269,7 +270,7 @@ const AdminDashboard = () => {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => navigate(`/dashboard/${client.id}`)}
+                          onClick={() => navigate(`/dashboard/${client._id}`)}
                         >
                           View
                           <ChevronRight className="ml-1 h-4 w-4" />

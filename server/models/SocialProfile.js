@@ -228,11 +228,10 @@ const socialProfileSchema = new mongoose.Schema(
   },
   {
     timestamps: true, // This will add createdAt and updatedAt automatically
-  }
+  },
 );
 
 // Indexes for better query performance
-socialProfileSchema.index({ email: 1 });
 socialProfileSchema.index({ status: 1 });
 socialProfileSchema.index({ company: 1 });
 socialProfileSchema.index({ platforms: 1 });
