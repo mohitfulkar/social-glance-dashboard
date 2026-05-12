@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Lock, User } from "lucide-react";
 import axios from "axios";
+import { baseUrl } from "@/constants";
 
 const Login = ({ isAdmin = false }) => {
   const [email, setEmail] = useState("");
@@ -30,7 +31,7 @@ const Login = ({ isAdmin = false }) => {
       }
     } else {
       try {
-        const res = await axios.post("http://localhost:5000/api/login", {
+        const res = await axios.post(`${baseUrl}/login`, {
           email,
           password,
         });

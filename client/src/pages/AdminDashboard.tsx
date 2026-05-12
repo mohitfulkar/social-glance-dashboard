@@ -11,6 +11,7 @@ import {
 // import { Link } from "react-router-dom"; // Commented out as not supported in artifacts
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { baseUrl } from "@/constants";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -28,7 +29,7 @@ const AdminDashboard = () => {
   const fetchStats = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/profile/profile-stats"
+        `${baseUrl}/profile/profile-stats`
       );
       if (!response.ok) throw new Error("Failed to fetch stats");
       const data = await response.json();
@@ -42,7 +43,7 @@ const AdminDashboard = () => {
   // Fetch clients data
   const fetchClients = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/profile");
+      const response = await fetch(`${baseUrl}/profile`);
       if (!response.ok) throw new Error("Failed to fetch clients");
       const result = await response.json();
       if (result.success) {

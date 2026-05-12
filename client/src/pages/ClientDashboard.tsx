@@ -32,6 +32,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { baseUrl } from "@/constants";
 
 const ClientDashboard = () => {
   const { clientId } = useParams();
@@ -44,7 +45,7 @@ const ClientDashboard = () => {
       try {
         setLoading(true);
         const response = await fetch(
-          `http://localhost:5000/api/profile/${clientId}`
+          `${baseUrl}/profile/${clientId}`
         );
 
         if (!response.ok) {
@@ -142,11 +143,10 @@ const ClientDashboard = () => {
           </div>
           <div className="mt-4 md:mt-0 flex items-center space-x-4">
             <Badge
-              className={`${
-                client.status === "active"
+              className={`${client.status === "active"
                   ? "bg-green-500/20 text-green-400"
                   : "bg-yellow-500/20 text-yellow-400"
-              } border`}
+                } border`}
             >
               {client.status}
             </Badge>

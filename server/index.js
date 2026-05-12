@@ -9,7 +9,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:8080", // frontend URL
+    origin: "*", // frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // if you send cookies or auth headers
   }),
@@ -27,7 +27,6 @@ app.use("/api/profile", socialProfileRoutes);
 
 // MongoDB connection
 
-console.log(process.env.MONGO_URI);
 
 mongoose
   .connect(process.env.MONGO_URI)
